@@ -35,8 +35,8 @@
   </div>
 </nav>
 <div class="container" id="main-container">
-  <div class="row">
-    <div *ngFor="let employee of employees" class="col-md-6 col-xl-3">
+  <div class="row" *ngIf="employees$ | async as employees">
+    <div *ngFor="let employee of employees.appData" class="col-md-6 col-xl-3">
       <div class="card m-b-30">
         <div class="card-body row">
           <div class="col-6">

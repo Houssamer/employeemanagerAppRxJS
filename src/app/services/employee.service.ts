@@ -11,34 +11,34 @@ export class EmployeeService {
 
   constructor(private http: HttpClient) {}
 
-  $getAllEmployee = <Observable<Employee[]>>(
+  getAllEmployee$ = <Observable<Employee[]>>(
     this.http
       .get<Employee[]>(`${this.apiUrl}/all`)
       .pipe(tap(console.log), catchError(this.handleError))
   );
 
-  $getEmployeeById = (id: number) =>
+  getEmployeeById$ = (id: number) =>
     <Observable<Employee>>(
       this.http
         .get<Employee>(`${this.apiUrl}/find/${id}`)
         .pipe(tap(console.log), catchError(this.handleError))
     );
 
-  $addEmployee = (employee: Employee) =>
+  addEmployee$ = (employee: Employee) =>
     <Observable<Employee>>(
       this.http
         .post<Employee>(`${this.apiUrl}/add`, employee)
         .pipe(tap(console.log), catchError(this.handleError))
     );
 
-  $updateEmployee = (employee: Employee) =>
+  updateEmployee$ = (employee: Employee) =>
     <Observable<Employee>>(
       this.http
         .post<Employee>(`${this.apiUrl}/update`, employee)
         .pipe(tap(console.log), catchError(this.handleError))
     );
 
-  $deleteEmployee = (id: number) =>
+  deleteEmployee$ = (id: number) =>
     <Observable<any>>(
       this.http
         .delete(`${this.apiUrl}/delete/${id}`)
