@@ -38,7 +38,7 @@ export class EmployeeService {
         .pipe(tap(console.log), catchError(this.handleError))
     );
 
-  deleteEmployee$ = (id: number) =>
+  deleteEmployee$ = (id: number | undefined) =>
     <Observable<any>>(
       this.http
         .delete(`${this.apiUrl}/delete/${id}`)

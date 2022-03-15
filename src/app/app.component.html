@@ -358,9 +358,14 @@
 </div>
 
 <!-- Notification for no employees -->
-<div *ngIf="employees?.length == 0" class="col-lg-12 col-md-12 col-xl-12">
-  <div class="alert alert-info" role="alert">
-    <h4 class="alert-heading">NO EMPLOYEES!</h4>
-    <p>No Employees were found.</p>
+<div *ngIf="(employees$ | async) as employees">
+  <div
+    *ngIf="employees.appData.length == 0"
+    class="col-lg-12 col-md-12 col-xl-12"
+  >
+    <div class="alert alert-info" role="alert">
+      <h4 class="alert-heading">NO EMPLOYEES!</h4>
+      <p>No Employees were found.</p>
+    </div>
   </div>
 </div>

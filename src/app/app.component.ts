@@ -15,6 +15,8 @@ export class AppComponent implements OnInit {
   private employeesSubject = new BehaviorSubject<CustomResponse>({
     appData: [],
   });
+  public editEmployee: Employee | null = null;
+  public deletedEmployee: Employee | null = null;
 
   constructor(private employeeService: EmployeeService) {}
 
@@ -60,33 +62,72 @@ export class AppComponent implements OnInit {
   }
 
   updateEmployee(employee: Employee) {
-    this.employees$ = this.employeeService
-      .updateEmployee$(employee)
-      .pipe(
-        map((response) => {
-          this.employeesSubject.value.appData =
-            this.employeesSubject.value.appData.map((employee) => {
-              if (employee.id === response.id) {
-                employee === response;
-                return employee;
-              } else {
-                return employee;
-              }
-            });
-          this.employeesSubject.next({
-            appData: this.employeesSubject.value.appData,
-          });
-          return {
-            appData: this.employeesSubject.value.appData,
-          };
-        }),
-        catchError((error: string) => {
-          console.log(error);
-          return of({
-            appData: this.employeesSubject.value.appData,
-            error: error,
-          });
-        })
-      );
+    this.employees$ = this.employeeService.updateEmployee$(employee).pipe(
+      map((response) => {
+        this.employeesSubject.next({
+          appData: this.employeesSubject.value.appData.map((employee) => {
+            if (employee.id === response.id) {
+              employee === response;
+              return employee;
+            } else {
+              return employee;
+            }
+          }),
+        });
+        return {
+          appData: this.employeesSubject.value.appData,
+        };
+      }),
+      catchError((error: string) => {
+        console.log(error);
+        return of({
+          appData: this.employeesSubject.value.appData,
+          error: error,
+        });
+      })
+    );
   }
+  deleteEmployee(deletedE: Employee | null) {
+    this.employees$ = this.employeeService.deleteEmployee$(deletedE?.id).pipe(
+      map((response) => {
+        this.employeesSubject.next({
+          appData: this.employeesSubject.value.appData.filter((employee) => {
+            return employee.id !== deletedE?.id;
+          }),
+        });
+        return {
+          appData: this.employeesSubject.value.appData,
+        };
+      })
+    );
+  }
+
+  openModal(employee: Employee | null, operation: string): void {
+    const container = document.getElementById('main-container');
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.style.display = 'none';
+    button.setAttribute('data-toggle', 'modal');
+
+    switch (operation) {
+      case 'add':
+        button.setAttribute('data-target', '#addEmployeeModal');
+        break;
+      case 'edit':
+        button.setAttribute('data-target', '#updateEmployeeModal');
+        this.editEmployee = employee;
+        break;
+      case 'delete':
+        button.setAttribute('data-target', '#deleteEmployeeModal');
+        this.deletedEmployee = employee;
+        break;
+      default:
+        break;
+    }
+
+    container?.appendChild(button);
+    button.click();
+  }
+
+  searchEmployee(name: string) {}
 }
