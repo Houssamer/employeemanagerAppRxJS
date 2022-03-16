@@ -39,16 +39,17 @@ export class AppComponent implements OnInit {
     );
   }
 
-  addEmployee(employee: NgForm) {
+  addEmployee(employee: Employee) {
+    document.getElementById('add-employee-form')?.click();
     this.employees$ = this.employeeService
-      .addEmployee$(employee.value as Employee)
+      .addEmployee$(employee)
       .pipe(
         map((response) => {
           this.employeesSubject.next({
-            appData: [response, ...this.employeesSubject.value.appData],
+            appData: [...this.employeesSubject.value.appData, response],
           });
           return {
-            appData: [response, ...this.employeesSubject.value.appData],
+            appData: this.employeesSubject.value.appData,
           };
         }),
         catchError((error: string) => {
@@ -62,6 +63,7 @@ export class AppComponent implements OnInit {
   }
 
   updateEmployee(employee: Employee) {
+    document.getElementById('edit-close')?.click();
     this.employees$ = this.employeeService.updateEmployee$(employee).pipe(
       map((response) => {
         this.employeesSubject.next({
@@ -88,6 +90,7 @@ export class AppComponent implements OnInit {
     );
   }
   deleteEmployee(deletedE: Employee | null) {
+    document.getElementById('deleteClose')?.click();
     this.employees$ = this.employeeService.deleteEmployee$(deletedE?.id).pipe(
       map((response) => {
         this.employeesSubject.next({
